@@ -198,6 +198,7 @@ task.wait(.2)
 
 local prompts = {}
 local alreadyprompting = false
+local teleportPending = false
 
 local idk = 1
 for i, prompt in workspace:GetDescendants() do
@@ -321,7 +322,6 @@ local function teleportToServer()
         Log("Couldn't find a server. Wait for a prompt to enable.")
     end
 end
-local teleportPending = false
 
 function loop()
     Log("looping, please wait...")

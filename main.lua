@@ -194,6 +194,7 @@ workspace.ChildAdded:Connect(function(child)
     end
 end)
 Log("diamond farm all set, going to prompt knife farm")
+if _G.stealEnabled == true then
 task.wait(.2)
 
 local prompts = {}
@@ -377,4 +378,7 @@ for i, prompt in prompts do
         promptisenabled(prompt)
     end)
     promptisenabled(prompt)
+end
+else
+	Log("Auto Steal disabled, enjoy your diamonds!")
 end

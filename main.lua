@@ -308,7 +308,7 @@ function loop()
         Log("all prompts disabled, please wait until a prompt is enabled...")
         local nomoreprompts = tick()
         task.spawn(function()
-            while tick() - nomoreprompts <= 15 do task.wait() end
+            while tick() - nomoreprompts <= 15 and not alreadyprompting do task.wait() end
             Log("No prompts enabled after 15 seconds, going to another server...")
             task.wait(1)
             local req = game:HttpGet("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true")

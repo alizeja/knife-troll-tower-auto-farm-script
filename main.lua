@@ -373,7 +373,7 @@ task.spawn(function()
 end)
 Log("setting up all prompts...")
 for i, prompt in prompts do
-    prompt.Changed:Connect(function()
+    prompt:GetPropertyChangedSignal("Enabled"):Connect(function()
         promptisenabled(prompt)
     end)
     promptisenabled(prompt)

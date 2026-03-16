@@ -194,191 +194,194 @@ workspace.ChildAdded:Connect(function(child)
     end
 end)
 Log("diamond farm all set, going to prompt knife farm")
+
+Log(_G.stealEnabled)
+
 if _G.stealEnabled == true then
-task.wait(.2)
+	task.wait(.2)
 
-local prompts = {}
-local alreadyprompting = false
-local teleportPending = false
+	local prompts = {}
+	local alreadyprompting = false
+	local teleportPending = false
 
-local idk = 1
-for i, prompt in workspace:GetDescendants() do
-    if prompt.Name == "StandProximity" and prompt.Parent.Parent.Name == "StealKnifeToolGiver" then
-        table.insert(prompts, prompt)
-        Log(prompts[idk])
-        idk += 1
-    end
-end
-Log("got all prompts!")
+	local idk = 1
+	for i, prompt in workspace:GetDescendants() do
+		if prompt.Name == "StandProximity" and prompt.Parent.Parent.Name == "StealKnifeToolGiver" then
+			table.insert(prompts, prompt)
+			Log(prompts[idk])
+			idk += 1
+		end
+	end
+	Log("got all prompts!")
 
-local function activatePrompt(p, ppos, pn)
-    if alreadyprompting then Log("already prompting something") return end
-	teleportPending = false
-    Log("prompting:", pn)
-    alreadyprompting = true
-    plr.Character:PivotTo(ppos)
-    cam.CFrame = plr.Character.HumanoidRootPart.CFrame
-    task.wait(.2)
-    p:InputHoldBegin()
-    local triggering = true
+	local function activatePrompt(p, ppos, pn)
+		if alreadyprompting then Log("already prompting something") return end
+		teleportPending = false
+		Log("prompting:", pn)
+		alreadyprompting = true
+		plr.Character:PivotTo(ppos)
+		cam.CFrame = plr.Character.HumanoidRootPart.CFrame
+		task.wait(.2)
+		p:InputHoldBegin()
+		local triggering = true
 
-    p.Triggered:Once(function()
-        Log("done triggering?")
-        task.wait(.1)
-        p:InputHoldEnd()
-        triggering = false
-        alreadyprompting = false
-        task.wait()
-        if p.Enabled then
-            p:InputHoldBegin()
-            task.wait(p.HoldDuration + .1)
-        end
-        task.wait(.2)
-        loop()
-    end)
+		p.Triggered:Once(function()
+			Log("done triggering?")
+			task.wait(.1)
+			p:InputHoldEnd()
+			triggering = false
+			alreadyprompting = false
+			task.wait()
+			if p.Enabled then
+				p:InputHoldBegin()
+				task.wait(p.HoldDuration + .1)
+			end
+			task.wait(.2)
+			loop()
+		end)
 
-    local debugnumber = 0
+		local debugnumber = 0
 
-    task.spawn(function()
-        while triggering do
-            task.wait(5)
-            if triggering then
-                if not p.Enabled then
-                    Log("triggering, but prompt disabled. ending trigger...")
-                    alreadyprompting = false
-                    triggering = false
-                    loop()
-                    break
-                end
+		task.spawn(function()
+			while triggering do
+				task.wait(5)
+				if triggering then
+					if not p.Enabled then
+						Log("triggering, but prompt disabled. ending trigger...")
+						alreadyprompting = false
+						triggering = false
+						loop()
+						break
+					end
 
-                Log("still not done? ")
-                if debugnumber >= 3 then
-                    Log("probably stuck, trigger canceled.")
-                    alreadyprompting = false
-                    triggering = false
-                    loop()
-                    break
-                end
-                plr.Character:PivotTo(ppos)
-                p:InputHoldEnd()
-                task.wait(.2)
-                p:InputHoldBegin()
-                debugnumber += 1
-            else
-                break
-            end
-        end
-    end)
-end
+					Log("still not done? ")
+					if debugnumber >= 3 then
+						Log("probably stuck, trigger canceled.")
+						alreadyprompting = false
+						triggering = false
+						loop()
+						break
+					end
+					plr.Character:PivotTo(ppos)
+					p:InputHoldEnd()
+					task.wait(.2)
+					p:InputHoldBegin()
+					debugnumber += 1
+				else
+					break
+				end
+			end
+		end)
+	end
 
-local function promptisenabled(prompt)
-    local pn = prompt.Parent.Parent.Top.Attachment.BillboardGui.SIGN.Text
-    if prompt.Enabled == true then
-        task.wait(.1)
-        local ppos
-        if pn == "DARK EDGE" then
-            ppos = CFrame.new(-279, 69, -525)
-        elseif pn == "LIGHTING KNIFE" then
-            ppos = CFrame.new(-171, 93, -419)
-        elseif pn == "CANDY KNIFE" then
-            ppos = CFrame.new(-178, 57, -88)
-        elseif pn == "SLIME KNIFE" then
-            ppos = CFrame.new(-286, 5, -30)
-        elseif pn == "EPIC KNIFE BOX" then
-            ppos = CFrame.new(137, 4, -309)
-        elseif pn == "VOID KNIFE" then
-            ppos = CFrame.new(-230, 428, -295)
-        end
+	local function promptisenabled(prompt)
+		local pn = prompt.Parent.Parent.Top.Attachment.BillboardGui.SIGN.Text
+		if prompt.Enabled == true then
+			task.wait(.1)
+			local ppos
+			if pn == "DARK EDGE" then
+				ppos = CFrame.new(-279, 69, -525)
+			elseif pn == "LIGHTING KNIFE" then
+				ppos = CFrame.new(-171, 93, -419)
+			elseif pn == "CANDY KNIFE" then
+				ppos = CFrame.new(-178, 57, -88)
+			elseif pn == "SLIME KNIFE" then
+				ppos = CFrame.new(-286, 5, -30)
+			elseif pn == "EPIC KNIFE BOX" then
+				ppos = CFrame.new(137, 4, -309)
+			elseif pn == "VOID KNIFE" then
+				ppos = CFrame.new(-230, 428, -295)
+			end
 
-        Log(pn.." is enabled! trying to prompt...")
-        activatePrompt(prompt, ppos, pn)
-        return true
-    else
-        Log(pn.." is disabled.")
-        return false
-    end
-end
+			Log(pn.." is enabled! trying to prompt...")
+			activatePrompt(prompt, ppos, pn)
+			return true
+		else
+			Log(pn.." is disabled.")
+			return false
+		end
+	end
 
-local function teleportToServer()
-    local req = game:HttpGet("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true")
-    local body = game:GetService("HttpService"):JSONDecode(req)
-    local servers = {}
+	local function teleportToServer()
+		local req = game:HttpGet("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true")
+		local body = game:GetService("HttpService"):JSONDecode(req)
+		local servers = {}
 
-    if body and body.data then
-        for _, v in next, body.data do
-            if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.id ~= game.JobId then
-                table.insert(servers, v.id)
-            end
-        end
-    end
+		if body and body.data then
+			for _, v in next, body.data do
+				if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.id ~= game.JobId then
+					table.insert(servers, v.id)
+				end
+			end
+		end
 
-    if #servers > 0 then
-        queue_on_teleport([[ 
+		if #servers > 0 then
+			queue_on_teleport([[ 
             task.wait(5)
             loadstring(game:HttpGet("https://raw.githubusercontent.com/alizeja/knife-troll-tower-auto-farm-script/refs/heads/main/main.lua"))()
         ]])
 
-        game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, servers[math.random(1,#servers)], plr)
-    else
-        Log("Couldn't find a server. Wait for a prompt to enable.")
-    end
-end
-
-function loop()
-    Log("looping, please wait...")
-    local falseamnt = 0
-    for i, prompt in prompts do
-        local isfalse = promptisenabled(prompt)
-        if isfalse == false then
-            falseamnt += 1
-        end
-    end
-	
-    if falseamnt >= 6 then
-		if teleportPending then return end
-    	Log("all prompts disabled, please wait until a prompt is enabled...")
-
-    	teleportPending = true
-    	local start = tick()
-		
-    	task.spawn(function()
-        	while tick() - start < 15 do
-            	if alreadyprompting or not teleportPending then
-                	Log("prompt activated, canceling teleport.")
-                	return
-            	end
-            	task.wait(0.2)
-        	end
-
-        	if not alreadyprompting and teleportPending then
-            	Log("No prompts enabled after 15 seconds, going to another server...")
-            	teleportToServer()
-        	end
-    	end)
+			game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, servers[math.random(1,#servers)], plr)
+		else
+			Log("Couldn't find a server. Wait for a prompt to enable.")
+		end
 	end
-end
 
-Log("script is ready, resetting to start prompting...")
-plr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Dead)
-task.wait(5)
-Log("freezing character...")
-task.spawn(function()
-    while task.wait() do
-        local char = plr.Character or plr.CharacterAdded()
-        local root = plr.Character:FindFirstChild("HumanoidRootPart")
+	function loop()
+		Log("looping, please wait...")
+		local falseamnt = 0
+		for i, prompt in prompts do
+			local isfalse = promptisenabled(prompt)
+			if isfalse == false then
+				falseamnt += 1
+			end
+		end
 
-        if char and root then
-            root.AssemblyLinearVelocity = Vector3.new(0,0,0)
-        end
-    end
-end)
-Log("setting up all prompts...")
-for i, prompt in prompts do
-    prompt:GetPropertyChangedSignal("Enabled"):Connect(function()
-        promptisenabled(prompt)
-    end)
-    promptisenabled(prompt)
-end
+		if falseamnt >= 6 then
+			if teleportPending then return end
+			Log("all prompts disabled, please wait until a prompt is enabled...")
+
+			teleportPending = true
+			local start = tick()
+
+			task.spawn(function()
+				while tick() - start < 15 do
+					if alreadyprompting or not teleportPending then
+						Log("prompt activated, canceling teleport.")
+						return
+					end
+					task.wait(0.2)
+				end
+
+				if not alreadyprompting and teleportPending then
+					Log("No prompts enabled after 15 seconds, going to another server...")
+					teleportToServer()
+				end
+			end)
+		end
+	end
+
+	Log("script is ready, resetting to start prompting...")
+	plr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Dead)
+	task.wait(5)
+	Log("freezing character...")
+	task.spawn(function()
+		while task.wait() do
+			local char = plr.Character or plr.CharacterAdded()
+			local root = plr.Character:FindFirstChild("HumanoidRootPart")
+
+			if char and root then
+				root.AssemblyLinearVelocity = Vector3.new(0,0,0)
+			end
+		end
+	end)
+	Log("setting up all prompts...")
+	for i, prompt in prompts do
+		prompt:GetPropertyChangedSignal("Enabled"):Connect(function()
+			promptisenabled(prompt)
+		end)
+		promptisenabled(prompt)
+	end
 else
 	Log("Auto Steal disabled, enjoy your diamonds!")
 end

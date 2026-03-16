@@ -12,7 +12,7 @@
 
 
 
-
+if not game:IsLoaded() then game.Loaded:Wait() end
 local function makeDraggable(frame, dragHandle)
 	dragHandle = dragHandle or frame
 

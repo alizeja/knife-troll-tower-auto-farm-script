@@ -306,6 +306,35 @@ function loop()
 
     if falseamnt >= 6 then
         Log("all prompts disabled, please wait until a prompt is enabled...")
+        local nomoreprompts = tick()
+        task.spawn(function()
+            while tick() - nomoreprompts <= 15 do task.wait() end
+            Log("No prompts enabled after 15 seconds, going to another server...")
+            task.wait(1)
+            local req = game:HttpGet("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true")
+	        local body = game:GetService("HttpService"):JSONDecode(req)
+            local servers = {}
+
+	        if body and body.data then
+		        for i, v in next, body.data do
+			        if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.id ~= game.JobId then
+				        table.insert(servers, 1, v.id)
+			        end
+		        end
+	        end
+            
+	        if #servers > 0 then
+                queue_on_teleport([[
+                    task.wait(5)
+                    loadstring(game:HttpGet("https://raw.githubusercontent.com/alizeja/knife-troll-tower-auto-farm-script/refs/heads/main/main.lua"))()
+                ]])
+                task.wait()
+		        game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, servers[math.random(1, #servers)], plr)
+	        else
+		        Log("Couldn't find a server.")
+                Log("All you can do is wait for a prompt to enable...")
+	        end
+        end)
     end
 end
 

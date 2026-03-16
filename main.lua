@@ -195,7 +195,18 @@ workspace.ChildAdded:Connect(function(child)
 end)
 Log("diamond farm all set, going to prompt knife farm")
 
-Log(_G.stealEnabled)
+
+
+
+
+
+
+
+
+
+
+
+print(_G.stealEnabled)
 
 if _G.stealEnabled == true then
 	task.wait(.2)

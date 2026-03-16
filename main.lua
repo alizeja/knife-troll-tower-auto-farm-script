@@ -317,7 +317,8 @@ if _G.stealEnabled == true then
 
 		if #servers > 0 then
 			queue_on_teleport([[ 
-            task.wait(5)
+            task.wait(3)
+			_G.stealEnabled = true
             loadstring(game:HttpGet("https://raw.githubusercontent.com/alizeja/knife-troll-tower-auto-farm-script/refs/heads/main/main.lua"))()
         ]])
 

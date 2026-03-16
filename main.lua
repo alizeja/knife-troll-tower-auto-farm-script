@@ -171,7 +171,9 @@ function Log(message)
 	task.defer(autoScroll)
 end
 
-
+if game:GetService("Players").LocalPlayer.PlayerGui:findFirstChild("DailyRewardsGui") then
+	game:GetService("Players").LocalPlayer.PlayerGui.DailyRewardsGui:Destroy()
+end
 
 local diamonds = workspace.Diamonds
 local plr = game.Players.LocalPlayer
